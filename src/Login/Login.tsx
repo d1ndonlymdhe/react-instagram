@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import axios from "axios";
 import { server } from "../vars/vars";
-export default function LoginPage() {
+export default function LoginPage(props: LoginPageProps) {
     const usernameRef = useRef<HTMLInputElement>(null)
     const passwordRef = useRef<HTMLInputElement>(null)
     const handleSubmit = (e: React.FormEvent) => {
