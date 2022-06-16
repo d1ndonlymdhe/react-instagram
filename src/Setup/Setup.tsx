@@ -27,4 +27,5 @@ export default function Setup() {
     if (loading) {
         return <div>Loading</div>
     }
+    return <div>Welcome {username}</div>
 }
