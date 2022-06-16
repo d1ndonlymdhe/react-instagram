@@ -35,9 +35,9 @@ export default function SignUpPage() {
             axios.post(`${server}/signup`, { username: username, password: password }).then(res => {
                 if (res.data.status === "ok") {
                     setSignUpError("");
-                    setSignUpSuccess(res.data.message);
+                    setSignUpSuccess(res.data.message.text);
                 } else {
-                    setSignUpError(res.data.message)
+                    setSignUpError(res.data.message.text)
                 }
             })
         }

@@ -9,6 +9,9 @@ import Setup from './Setup/Setup';
 import { useState } from 'react';
 import axios from 'axios';
 import { server } from './vars/vars';
+import Cookies from 'js-cookie';
+// import { withCredentialsAxios } from './vars/vars';
+
 function App() {
   const [globalUsername, setGlobalUsername] = useState("")
   useEffect(() => {
@@ -19,7 +22,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Index {...{ setGlobalUsername, globalUsername }} />}></Route>
         <Route path="/signup" element={<SignUpPage></SignUpPage>}></Route>
-        <Route path="/setup" element={<Setup {...{ globalUsername, setGlobalUsername }}></Setup>}></Route>
+        <Route path="/setup" element={<Setup></Setup>}></Route>
       </Routes>
     </>
   )
@@ -34,16 +37,13 @@ function Index(props: LoginPageProps) {
   const [isLoginButtonActive, setIsLoginButtonActive] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [loginSuccess, setLoginSuccess] = useState(false);
+  const [hash, setHash] = useState("");
   useEffect(() => {
     if (loginSuccess) {
-      const username = usernameRef.current?.value;
-      if (username !== undefined) {
-        setGlobalUsername(username);
-        console.log(globalUsername)
-      }
+      Cookies.set("hash", hash);
       window.location.href = "/setup";
     }
-  }, [loginSuccess]);
+  }, [loginSuccess, hash]);
   const setLoginButtonColorOnChange = (e: ChangeEventHandler) => {
     if (usernameRef.current?.value && usernameRef.current.value.length > 0 && passwordRef.current?.value && passwordRef.current.value.length >= 8) {
       setLoginButtonColor(buttonColorAvialable);
@@ -57,20 +57,18 @@ function Index(props: LoginPageProps) {
     if (isLoginButtonActive) {
       const username = usernameRef.current?.value;
       if (username !== undefined) {
-        console.log("username = " + username);
         setGlobalUsername(username);
-        console.log(globalUsername)
       }
       const password = passwordRef.current?.value;
       if (username !== undefined && password !== undefined) {
         axios.post(`${server}/login`, { username: username, password: password }).then(res => {
           if (res.data.status === "error") {
-            setLoginError(res.data.message);
+            setLoginError(res.data.message.text);
           } else {
             setLoginError("");
             setGlobalUsername(username);
-            console.log(globalUsername)
             setLoginSuccess(true);
+            setHash(res.data.message.hash);
           }
         });
       } else {
