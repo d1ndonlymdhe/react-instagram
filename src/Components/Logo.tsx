@@ -1,5 +1,9 @@
 import react from "react"
-
-export default function Logo() {
-    return <div className="font-billabong">Instagram</div>
+type LogoPropsTypes = {
+    className?: string;
+}
+export default function Logo(props: LogoPropsTypes) {
+    const { className } = props;
+    return <span className={`font-billabong flex justify-center items-center ${className}`}>
+        <div>Instagram</div></span>
 }

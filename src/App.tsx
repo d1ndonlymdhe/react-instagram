@@ -10,12 +10,25 @@ import { useState } from 'react';
 import axios from 'axios';
 import { server } from './vars/vars';
 import Cookies from 'js-cookie';
+import Home from './Home/Home';
 // import { withCredentialsAxios } from './vars/vars';
 
 function App() {
   const [globalUsername, setGlobalUsername] = useState("")
+  const hash = Cookies.get("hash")
   useEffect(() => {
     document.title = "Instagram";
+    if (hash) {
+      axios.post(`${server}/userInfo`, { hash: hash }).then(res => {
+        if (res.data.status === "ok") {
+          if (res.data.firstLogin) {
+            window.location.href = "/setup"
+          } else {
+            window.location.href = "/home"
+          }
+        }
+      })
+    }
   }, [])
   return (
     <>
@@ -23,6 +36,7 @@ function App() {
         <Route path="/" element={<Index {...{ setGlobalUsername, globalUsername }} />}></Route>
         <Route path="/signup" element={<SignUpPage></SignUpPage>}></Route>
         <Route path="/setup" element={<Setup></Setup>}></Route>
+        <Route path="/home" element={<Home></Home>}></Route>
       </Routes>
     </>
   )
@@ -30,7 +44,7 @@ function App() {
 function Index(props: LoginPageProps) {
   const { setGlobalUsername, globalUsername } = props;
   const buttonColorBlocked = 'bg-[#afdcf9]';
-  const buttonColorAvialable = 'bg-[#0095f6]';
+  const buttonColorAvailable = 'bg-[#0095f6]';
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const [loginButtonColor, setLoginButtonColor] = useState(buttonColorBlocked)
@@ -46,7 +60,7 @@ function Index(props: LoginPageProps) {
   }, [loginSuccess, hash]);
   const setLoginButtonColorOnChange = (e: ChangeEventHandler) => {
     if (usernameRef.current?.value && usernameRef.current.value.length > 0 && passwordRef.current?.value && passwordRef.current.value.length >= 8) {
-      setLoginButtonColor(buttonColorAvialable);
+      setLoginButtonColor(buttonColorAvailable);
       setIsLoginButtonActive(true);
     } else {
       setLoginButtonColor(buttonColorBlocked);
@@ -106,7 +120,7 @@ function Index(props: LoginPageProps) {
               <div className='h-[2px] border-2 border-solid border-gray-200 w-full'></div>
             </div>
             <div id="signupButtonWrapper">
-              <Button text="Sign Up" bonClick={handleSignup} className={`my-2 bg-neutral border-[1px] rounded-md border-black py-2 hover:bg-gray-300`}></Button>
+              <Button text="Sign Up" bonClick={handleSignup} className={`my-2 bg-neutral py-2 hover:bg-gray-300`}></Button>
             </div>
           </div>
         </div>

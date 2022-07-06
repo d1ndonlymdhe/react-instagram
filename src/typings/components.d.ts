@@ -15,15 +15,19 @@ type InputPropsTypes = {
   max?: number;
   // onChange?: (e: ChangeEventHandler<HTMLInputElement>) => void;
   onChange: (e: React.InputHTMLAttributes.onChange) => void;
+  /*rows:number;
+  cols:number;*/
+
 };
 type ButtonPropsTypes = {
   type?: "submit" | "reset" | undefined;
-  text: string;
+  text?: string;
   name?: stringl;
   bgColor?: string;
   id?: string;
   className?: string;
   bonClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  child?: JSX.Element
 };
 type ErrorPropsTypes = {
   message: string, className?: string

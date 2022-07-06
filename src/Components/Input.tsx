@@ -15,7 +15,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputPropsTypes>(
         ref={ref}
         min={min}
         max={max}
-        // onChange={onChange}
+        /*cols = {cols}
+        rows={rows}*/
         onChange={onChange}
       ></input>
     );
